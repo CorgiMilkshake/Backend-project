@@ -69,7 +69,8 @@ webServer.post("/add-activity", async (req, res) => {
     return;
   }
   await databaseClient.db().collection("customerActivities").insertOne(body);
-  res.send("Create Activity Successfully");
+  // res.send("Create Activity Successfully");
+  res.json(body);
 });
 
 webServer.post("/login", async (req, res) => {
