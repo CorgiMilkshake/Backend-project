@@ -58,6 +58,15 @@ webServer.post("/signup", async (req, res) => {
   res.json(body);
 });
 
+webServer.get("/add-activity", async (req, res) => {
+  const customerActivities = await databaseClient
+    .db()
+    .collection("customerActivities")
+    .find({})
+    .toArray();
+  res.json(customerActivities);
+});
+
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
   const [isBodyChecked, missingFields] = checkMissingField(
