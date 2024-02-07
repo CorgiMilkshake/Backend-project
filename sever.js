@@ -28,6 +28,8 @@ const ACT_DATA_KEYS = ["activityName","activityDes","activityType","hours","minu
 // server routes
 webServer.get("/", (req, res) => res.send("This is user management system"));
 
+
+
 // เป็นการดึงข้อมูลจาก Database
 webServer.get("/signup", async (req, res) => {
   const customerInfo = await databaseClient
@@ -39,7 +41,7 @@ webServer.get("/signup", async (req, res) => {
 });
 
 webServer.post("/signup", async (req, res) => {
-  let body = req.body;
+  const body = req.body;
   const [isBodyChecked, missingFields] = checkMissingField(
     CUSTOMER_DATA_KEYS,
     body
@@ -48,11 +50,21 @@ webServer.post("/signup", async (req, res) => {
     res.send(`Missing Fields: ${"".concat(missingFields)}`);
     return;
   }
+  // const saltRound = await bcrypt.genSalt(SALT);
   const saltRound = await bcrypt.genSalt(SALT);
   body["login_password"] = await bcrypt.hash(body["login_password"], saltRound);
 
   await databaseClient.db().collection("customerInfo").insertOne(body);
-  res.send("Create User Successfully");
+  res.json(body);
+});
+
+webServer.get("/add-activity", async (req, res) => {
+  const customerActivities = await databaseClient
+    .db()
+    .collection("customerActivities")
+    .find({})
+    .toArray();
+  res.json(customerActivities);
 });
 
 webServer.post("/add-activity", async (req, res) => {
@@ -66,7 +78,8 @@ webServer.post("/add-activity", async (req, res) => {
     return;
   }
   await databaseClient.db().collection("customerActivities").insertOne(body);
-  res.send("Create Activity Successfully");
+  // res.send("Create Activity Successfully");
+  res.json(body);
 });
 
 webServer.post("/login", async (req, res) => {
@@ -104,11 +117,12 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+const currentServer = webServer.listen(process.env.PORT || 3000, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
-  console.log(`SERVER IS ONLINE => http://${HOSTNAME}:${PORT}`);
+  console.log(`SERVER IS ONLINE => http://:${PORT}`);
 });
 
 const cleanup = () => {
