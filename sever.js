@@ -133,7 +133,7 @@ const currentServer = webServer.listen(process.env.PORT || 3000, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
-  console.log(`SERVER IS ONLINE => http://:${PORT}`);
+  console.log(`SERVER IS ONLINE => ${currentServer}`);
 });
 
 const cleanup = () => {
