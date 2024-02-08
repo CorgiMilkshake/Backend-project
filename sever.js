@@ -8,8 +8,8 @@ import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
 
-const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
-const PORT = process.env.SERVER_PORT || 3000;
+// const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
+// const PORT = process.env.SERVER_PORT || 3000;
 const SALT = 10;
 
 
