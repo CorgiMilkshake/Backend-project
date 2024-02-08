@@ -70,6 +70,7 @@ webServer.get("/add-activity", async (req, res) => {
 
 webServer.get("/your-activity/:_id", async (req, res) => {
   const responseID = req.params._id
+  console.log(responseID)
   const customerActivities = await databaseClient
     .db()
     .collection("customerActivities")
