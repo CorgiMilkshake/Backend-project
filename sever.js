@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
+import { ObjectId } from "mongodb";
 
 const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
@@ -64,6 +65,15 @@ webServer.get("/add-activity", async (req, res) => {
     .collection("customerActivities")
     .find({})
     .toArray();
+  res.json(customerActivities);
+});
+
+webServer.get("/your-activity/:_id", async (req, res) => {
+  const responseID = req.params._id
+  const customerActivities = await databaseClient
+    .db()
+    .collection("customerActivities")
+    .findOne({_id : ObjectId(responseID)})
   res.json(customerActivities);
 });
 
