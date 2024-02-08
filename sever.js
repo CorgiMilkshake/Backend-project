@@ -74,7 +74,7 @@ webServer.get("/your-activity/:_id", async (req, res) => {
   const customerActivities = await databaseClient
     .db()
     .collection("customerActivities")
-    .findOne({_id : ObjectId(responseID)})
+    .findOne({_id :new ObjectId(responseID)})
   res.json(customerActivities);
 });
 
