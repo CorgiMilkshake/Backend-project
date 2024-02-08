@@ -129,7 +129,7 @@ webServer.post("/login", async (req, res) => {
 
 // initilize web server
 // const currentServer = webServer.listen(PORT, HOSTNAME, () => {
-const currentServer = webServer.listen(PORT || 3000, () => {
+const currentServer = webServer.listen(process.env.PORT || 3000, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
