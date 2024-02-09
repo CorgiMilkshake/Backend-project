@@ -78,6 +78,25 @@ webServer.get("/your-activity/:_id", async (req, res) => {
   res.json(customerActivities);
 });
 
+webServer.delete("/your-activity/:_id", async (req, res) => {
+  const activityID = req.params._id;
+  console.log(activityID);
+  try {
+    const result = await databaseClient
+      .db()
+      .collection("customerActivities")
+      .deleteOne({ _id: new ObjectId(activityID) });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: "Activity deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Activity not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting activity:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
   const [isBodyChecked, missingFields] = checkMissingField(
