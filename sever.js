@@ -112,6 +112,26 @@ webServer.post("/add-activity", async (req, res) => {
   res.json(body);
 });
 
+webServer.put("/your-activity/:_id", async (req, res) => {
+  const activityID = req.params._id;
+  const updatedActivity = req.body; // ข้อมูลที่ต้องการอัปเดต
+  try {
+    // อัปเดตกิจกรรมของลูกค้าในฐานข้อมูล
+    const result = await databaseClient
+      .db()
+      .collection("customerActivities")
+      .updateOne({ _id: new ObjectId(activityID) }, { $set: updatedActivity });
+    if (result.modifiedCount === 1) {
+      res.status(200).json({ message: "Activity updated successfully" });
+    } else {
+      res.status(404).json({ message: "Activity not found" });
+    }
+  } catch (error) {
+    console.error("Error updating activity:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 webServer.post("/login", async (req, res) => {
   let body = req.body;
   const [isBodyChecked, missingFields] = checkMissingField(
