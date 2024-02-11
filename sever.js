@@ -36,38 +36,41 @@ webServer.post("/login", async (req, res) => {
     LOGIN_DATA_KEYS,
     body
   );
-  // console.log(body);
-  // res.send(body);
 
   if (!isBodyChecked) {
-    res.send(`MissingFields: ${missingFields}`);
+    res.status(400).send(`MissingFields: ${missingFields}`);
     return;
-}
+  }
+
+  const { login_email, login_password } = body;
+
+  if (!login_email || !login_password) {
+    return res.status(400).send({ error: { message: "Invalid email or password" } });
+  }
+
   const customerInfo = await databaseClient
     .db()
     .collection("customerInfo")
-    .findOne({login_email})
-    if (!customerInfo) {
-      return res
-        .status(400)
-        .send({ error: { message: "Invalid email or password" } });
-    }
+    .findOne({ login_email });
+
+  if (!customerInfo) {
+    return res.status(400).send({ error: { message: "Invalid email or password" } });
+  }
   
-    // Check password
-    const validPassword = bcrypt.compareSync(login_password, customerInfo.login_password);
-    if (!validPassword) {
-      return res
-        .status(400)
-        .send({ error: { message: "Invalid email or password" } });
-    }
-    res.send({ token: createJwt(login_email) });
+  // Check password
+  const validPassword = bcrypt.compareSync(login_password, customerInfo.login_password);
+  if (!validPassword) {
+    return res.status(400).send({ error: { message: "Invalid email or password" } });
+  }
+
+  res.send({ token: createJwt(login_email) });
 });
 
 function createJwt(login_email) {
   const jwtSecretKey = process.env.JWT_SECRET_KEY;
   const token = jwt.sign({id: login_email}, jwtSecretKey, {
     expiresIn: "3h",
-  });;
+  });
 
   return token;
 }
