@@ -7,6 +7,7 @@ import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
+import jwt from "jsonwebtoken";
 
 // const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 // const PORT = process.env.SERVER_PORT || 3000;
@@ -31,7 +32,8 @@ webServer.get("/", (req, res) => res.send("This is user management system"));
 
 
 webServer.post("/login", async (req, res) => {
-  let body = req.body;
+  let body = req.body; 
+  const { login_email, login_password } = body;
   const [isBodyChecked, missingFields] = checkMissingField(
     LOGIN_DATA_KEYS,
     body
@@ -42,25 +44,19 @@ webServer.post("/login", async (req, res) => {
     return;
   }
 
-  const { login_email, login_password } = body;
-
-  if (!login_email || !login_password) {
-    return res.status(400).send({ error: { message: "Invalid email or password" } });
-  }
-
   const customerInfo = await databaseClient
     .db()
     .collection("customerInfo")
     .findOne({ login_email });
 
   if (!customerInfo) {
-    return res.status(400).send({ error: { message: "Invalid email or password" } });
+    return res.status(400).send({ error: { message: "Invalid email or password22" } });
   }
   
   // Check password
   const validPassword = bcrypt.compareSync(login_password, customerInfo.login_password);
   if (!validPassword) {
-    return res.status(400).send({ error: { message: "Invalid email or password" } });
+    return res.status(400).send({ error: { message: "Invalid email or password33" } });
   }
 
   res.send({ token: createJwt(login_email) });
