@@ -13,8 +13,6 @@ const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
 const SALT = 10;
 
-
-
 // setting initial configuration for upload file, web server (express), and cors
 const upload = multer({ dest: "uploads/" });
 dotenv.config();
@@ -29,7 +27,6 @@ const LOGIN_DATA_KEYS = ["login_email", "login_password"];
 const ACT_DATA_KEYS = ["activityName","activityDes","activityType","hours","minutes","date","actImage"];
 // server routes
 webServer.get("/", (req, res) => res.send("This is user management system"));
-
 
 webServer.post("/login", async (req, res) => {
   let body = req.body; 
@@ -59,7 +56,8 @@ webServer.post("/login", async (req, res) => {
     return res.status(400).send({ error: { message: "Invalid email or password33" } });
   }
 
-  res.send({ token: createJwt(login_email) });
+  customerInfo.password = ""
+  res.send({ token: createJwt(customerInfo)});
 });
 
 function createJwt(login_email) {
@@ -71,7 +69,6 @@ function createJwt(login_email) {
   return token;
 }
 
-
 //   webServer.get("/home", async (req, res) => {
 //   const customerInfo = await databaseClient
 //     .db()
@@ -80,7 +77,6 @@ function createJwt(login_email) {
 //     .toArray();
 //   res.json(customerInfo);
 // });
-
 
 // เป็นการดึงข้อมูลจาก Database
 webServer.get("/signup", async (req, res) => {
@@ -114,7 +110,6 @@ webServer.post("/signup", async (req, res) => {
     res.send("User does exist.");
     exit();
   }
- 
 
   // const saltRound = await bcrypt.genSalt(SALT);
   const saltRound = await bcrypt.genSalt(SALT);
@@ -124,11 +119,11 @@ webServer.post("/signup", async (req, res) => {
   res.json(body);
 });
 
-webServer.get("/add-activity", async (req, res) => {
+webServer.get("/add-activity/:_id", async (req, res) => {
   const customerActivities = await databaseClient
     .db()
     .collection("customerActivities")
-    .find({})
+    .find({ user_id: req.params._id })
     .toArray();
   res.json(customerActivities);
 });
@@ -161,8 +156,6 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-
 
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
