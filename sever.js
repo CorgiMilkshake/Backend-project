@@ -9,8 +9,8 @@ import morgan from "morgan";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 
-// const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
-// const PORT = process.env.SERVER_PORT || 3000;
+const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
+const PORT = process.env.SERVER_PORT || 3000;
 const SALT = 10;
 
 
@@ -208,12 +208,12 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
-const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+// const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+const currentServer = webServer.listen(PORT, HOSTNAME, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
-  console.log(`SERVER IS ONLINE => ${currentServer}`);
+  console.log(`SERVER IS ONLINE => ${HOSTNAME, PORT}`);
 });
 
 const cleanup = () => {
