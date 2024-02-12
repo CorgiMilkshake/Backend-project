@@ -72,6 +72,16 @@ function createJwt(login_email) {
 }
 
 
+//   webServer.get("/home", async (req, res) => {
+//   const customerInfo = await databaseClient
+//     .db()
+//     .collection("customerInfo")
+//     .findMany({userId})
+//     .toArray();
+//   res.json(customerInfo);
+// });
+
+
 // เป็นการดึงข้อมูลจาก Database
 webServer.get("/signup", async (req, res) => {
   const customerInfo = await databaseClient
@@ -88,10 +98,24 @@ webServer.post("/signup", async (req, res) => {
     CUSTOMER_DATA_KEYS,
     body
   );
+
   if (!isBodyChecked) {
     res.send(`Missing Fields: ${"".concat(missingFields)}`);
     return;
   }
+
+   // Check if login_email is duplicate
+   const existingUser = await databaseClient
+   .db()
+   .collection("customerInfo")
+   .findOne({ login_email: body.login_email });
+   console.log("sdas"+existingUser)
+   if (existingUser !== null) {
+    res.send("User does exist.");
+    exit();
+  }
+ 
+
   // const saltRound = await bcrypt.genSalt(SALT);
   const saltRound = await bcrypt.genSalt(SALT);
   body["login_password"] = await bcrypt.hash(body["login_password"], saltRound);
@@ -138,6 +162,8 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
   }
 });
 
+
+
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
   const [isBodyChecked, missingFields] = checkMissingField(
@@ -182,6 +208,15 @@ webServer.post("/login", async (req, res) => {
 
   if (!isBodyChecked) {
     res.send(`Missing Fields: ${"".concat(missingFields)}`);
+    return;
+  }
+  // Check if login_email is duplicate
+  const existingUser = await databaseClient
+    .db()
+    .collection("customerInfo")
+    .findOne({ login_email: body.login_email });
+  if (existingUser === null) {
+    res.send("User does not exist.");
     return;
   }
 
