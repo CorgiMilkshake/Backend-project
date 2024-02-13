@@ -6,13 +6,15 @@ import bcrypt from "bcrypt";
 import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
-// import { ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 //connect the routes
 import addActitvityRouter from "./routes/add-activity.js"
 import loginRouter from "./routes/login.js";
 import signupRouter from "./routes/signup.js"
 import yourActRouter from "./routes/your-activity.js"
+import personalDetailRouter  from "./routes/personal-detail.js"
+import deleteAccountRouter from "./routes/delete-account.js"
 
 const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
@@ -29,12 +31,11 @@ webServer.use(morgan('dev'))
 webServer.use("/add-activity", addActitvityRouter);
 webServer.use("/login", loginRouter);
 webServer.use("/signup", signupRouter);
-webServer.use("/your-activity", yourActRouter)
+webServer.use("/your-activity", yourActRouter);
+webServer.use("/Personaldetail", personalDetailRouter);
+webServer.use("/DeleteAccount", deleteAccountRouter);
 
-
-// save key data ที่เราต้องใช้
-
-// server routes
+// server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
 
 //   webServer.get("/home", async (req, res) => {
@@ -67,6 +68,8 @@ const cleanup = () => {
     }
   });
 };
+
+
 
 // cleanup connection such as database
 process.on("SIGTERM", cleanup);
