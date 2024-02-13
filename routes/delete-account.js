@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 
 const deleteAccountRouter = express.Router();
 
-webServer.delete("/:_id", async (req, res) => {
+deleteAccountRouter.delete("/:_id", async (req, res) => {
     const personalID = req.params._id;
     // const deletePersonalID = req.body; 
   
