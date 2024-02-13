@@ -27,7 +27,7 @@ const webServer = express();
 webServer.use(cors());
 webServer.use(express.json());
 webServer.use(morgan('dev'))
-//called the routes
+//called routers
 webServer.use("/add-activity", addActitvityRouter);
 webServer.use("/login", loginRouter);
 webServer.use("/signup", signupRouter);
