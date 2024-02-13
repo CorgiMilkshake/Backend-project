@@ -45,7 +45,7 @@ signupRouter.post("/", async (req, res) => {
         return;
       }
     
-    //  เข้ารหัส password โดยใช้ bcrypt
+    // เข้ารหัส password โดยใช้ bcrypt
     const saltRound = await bcrypt.genSalt(SALT);
     body["login_password"] = await bcrypt.hash(body["login_password"], saltRound);
   
