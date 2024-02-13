@@ -27,6 +27,7 @@ const webServer = express();
 webServer.use(cors());
 webServer.use(express.json());
 webServer.use(morgan('dev'))
+
 //called routers
 webServer.use("/add-activity", addActitvityRouter);
 webServer.use("/login", loginRouter);
@@ -37,15 +38,6 @@ webServer.use("/DeleteAccount", deleteAccountRouter);
 
 // server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
-
-//   webServer.get("/home", async (req, res) => {
-//   const customerInfo = await databaseClient
-//     .db()
-//     .collection("customerInfo")
-//     .findMany({userId})
-//     .toArray();
-//   res.json(customerInfo);
-// });
 
 // initilize web server
 const currentServer = webServer.listen(process.env.PORT || 3000, () => {
@@ -68,8 +60,6 @@ const cleanup = () => {
     }
   });
 };
-
-
 
 // cleanup connection such as database
 process.on("SIGTERM", cleanup);
