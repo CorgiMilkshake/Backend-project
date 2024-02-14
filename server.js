@@ -39,6 +39,17 @@ webServer.use("/DeleteAccount", deleteAccountRouter);
 // server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
 
+webServer.get("/start-activity/:_id", async (req, res) => {
+  const responseID = req.params._id                   //รับค่า id จาก url parameter
+  
+  // ค้นหาข้อมูลจาก database
+  const customerActivities = await databaseClient
+    .db()
+    .collection("customerActivities")
+    .findOne({_id :new ObjectId(responseID)})
+  res.json(customerActivities);
+});
+
 // initilize web server
 const currentServer = webServer.listen(process.env.PORT || 3000, () => {
 // const currentServer = webServer.listen(PORT, HOSTNAME, () => {
