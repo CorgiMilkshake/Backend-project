@@ -7,6 +7,9 @@ import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
+// import multerS3 from "multer-s3";
+// import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import jwt from "jsonwebtoken";
 import fs from 'fs'
 
@@ -22,18 +25,23 @@ webServer.use(cors());
 webServer.use(express.json());
 webServer.use(morgan('dev'))
 
-//multer storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+//S3 Config
+  
+const accessKey = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const myBucket = process.env.AWS_BUCKET_NAME;
+const bucketRegion = process.env.AWS_REGION;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
   },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
+  region: bucketRegion
 })
-const upload = multer({ storage })
 
-
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 
 // save key data ที่เราต้องใช้
@@ -173,17 +181,17 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
 });
 
 //test delete img
-webServer.delete("/api/delete-image", (req, res) => {
-  const { imagePath } = req.body;
+// webServer.delete("/api/delete-image", (req, res) => {
+//   const { imagePath } = req.body;
 
-  try {
-    fs.unlinkSync(imagePath);
-    res.status(200).json({ message: "Image deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting image:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+//   try {
+//     fs.unlinkSync(imagePath);
+//     res.status(200).json({ message: "Image deleted successfully" });
+//   } catch (error) {
+//     console.error("Error deleting image:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
 
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
@@ -201,8 +209,23 @@ webServer.post("/add-activity", async (req, res) => {
 });
 
 //test upload image
-webServer.post("/api/upload",upload.single('actImage'), (req, res) => {
-  res.json(req.file);
+webServer.post("/api/upload",upload.single('actImage'), async (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
+
+  req.file.buffer
+
+  const params = {
+    Bucket: myBucket,
+    Key: req.file.originalname,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  }
+
+  const command = new PutObjectCommand(params)
+  await s3.send(command)
+
+  res.send(req.file)
 });
 
 webServer.put("/your-activity/:_id", async (req, res) => {
@@ -269,8 +292,8 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-const currentServer = webServer.listen(process.env.PORT || 3000, () => {
-// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+// const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+const currentServer = webServer.listen(PORT, HOSTNAME, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
