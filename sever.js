@@ -14,12 +14,26 @@ const PORT = process.env.SERVER_PORT || 3000;
 const SALT = 10;
 
 // setting initial configuration for upload file, web server (express), and cors
-const upload = multer({ dest: "uploads/" });
+// const upload = multer({ dest: "uploads/" });
 dotenv.config();
 const webServer = express();
 webServer.use(cors());
 webServer.use(express.json());
 webServer.use(morgan('dev'))
+
+//multer storage config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage })
+
+
+
 
 // save key data ที่เราต้องใช้
 const CUSTOMER_DATA_KEYS = ["signup_photo", "login_email", "login_password",  "signup_firstname", "signup_lastname", "signup_date", "signup_height", "signup_weight", "signup_gender", "signup_phone"];
@@ -172,6 +186,11 @@ webServer.post("/add-activity", async (req, res) => {
   res.json(body);
 });
 
+//test upload image
+webServer.post("/api/upload",upload.single('actImage'), (req, res) => {
+  res.json(req.file);
+});
+
 webServer.put("/your-activity/:_id", async (req, res) => {
   const activityID = req.params._id;
   const updatedActivity = req.body; // ข้อมูลที่ต้องการอัปเดต
@@ -236,8 +255,8 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-const currentServer = webServer.listen(process.env.PORT || 3000, () => {
-// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+// const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+const currentServer = webServer.listen(PORT, HOSTNAME, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
