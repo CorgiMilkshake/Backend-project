@@ -7,8 +7,6 @@ import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
-// import multerS3 from "multer-s3";
-// import AWS from 'aws-sdk';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import jwt from "jsonwebtoken";
 import fs from 'fs'
@@ -26,7 +24,7 @@ webServer.use(express.json());
 webServer.use(morgan('dev'))
 
 //S3 Config
-  
+
 const accessKey = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 const myBucket = process.env.AWS_BUCKET_NAME;
@@ -49,7 +47,7 @@ const CUSTOMER_DATA_KEYS = ["signup_photo", "login_email", "login_password",  "s
 const LOGIN_DATA_KEYS = ["login_email", "login_password"];
 const ACT_DATA_KEYS = ["activityName","activityDes","activityType","hours","minutes","date","actImage"];
 // server routes
-webServer.get("/", (req, res) => res.send("This is user management system"));
+webServer.get("/", (req, res) => res.send("This is GreenSculpt management system"));
 
 webServer.post("/login", async (req, res) => {
   let body = req.body; 
@@ -292,8 +290,8 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-// const currentServer = webServer.listen(process.env.PORT || 3000, () => {
-const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
