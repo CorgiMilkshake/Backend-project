@@ -178,18 +178,30 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
   }
 });
 
-//test delete img
-// webServer.delete("/api/delete-image", (req, res) => {
-//   const { imagePath } = req.body;
+webServer.delete("/delete-account/:_id", async (req, res) => {
+  const personalID = req.params._id;
+  // ดึงค่า _id มาจาก url parameter
 
-//   try {
-//     fs.unlinkSync(imagePath);
-//     res.status(200).json({ message: "Image deleted successfully" });
-//   } catch (error) {
-//     console.error("Error deleting image:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// });
+  try {
+      // ลบข้อมูลใน database
+      const deletePersonalDetail = await databaseClient
+          .db()
+          .collection("customerInfo")
+          .deleteOne({ _id: new ObjectId(personalID) });
+      // ถ้ามีการลบข้อมูลใน database ดังนั้น deletedCount จะเปลี่ยนเป็น = 1 
+      if (deletePersonalDetail.deletedCount === 1) {
+          //ถ้า deletedCount = 1 แสดงว่า ทำการลบข้อมูลสำเร็จ
+          res.status(200).json({ message: "Your personal detail is deleted successfully" });
+      } else {
+          //deletedCount != 1 แสดงว่า ทำการลบข้อมูลไม่สำเร็จ
+          res.status(404).json({ message: "Your personal detail not found" });
+      }
+  } catch (error) {
+      //detected error or having a problem with the server
+      console.error("Error deleting your personal detail :", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+});  
 
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
