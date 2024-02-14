@@ -8,7 +8,7 @@ import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
-// import fs from 'fs'
+import fs from 'fs'
 
 const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
@@ -173,17 +173,17 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
 });
 
 //test delete img
-// webServer.delete("/api/delete-image", (req, res) => {
-//   const { imagePath } = req.body;
+webServer.delete("/api/delete-image", (req, res) => {
+  const { imagePath } = req.body;
 
-//   try {
-//     fs.unlinkSync(imagePath);
-//     res.status(200).json({ message: "Image deleted successfully" });
-//   } catch (error) {
-//     console.error("Error deleting image:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// });
+  try {
+    fs.unlinkSync(imagePath);
+    res.status(200).json({ message: "Image deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting image:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 webServer.post("/add-activity", async (req, res) => {
   let body = req.body;
@@ -269,8 +269,8 @@ webServer.post("/login", async (req, res) => {
 });
 
 // initilize web server
-// const currentServer = webServer.listen(process.env.PORT || 3000, () => {
-const currentServer = webServer.listen(PORT, HOSTNAME, () => {
+const currentServer = webServer.listen(process.env.PORT || 3000, () => {
+// const currentServer = webServer.listen(PORT, HOSTNAME, () => {
   console.log(
     `DATABASE IS CONNECTED: NAME => ${databaseClient.db().databaseName}`
   );
