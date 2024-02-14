@@ -15,6 +15,7 @@ import signupRouter from "./routes/signup.js"
 import yourActRouter from "./routes/your-activity.js"
 import personalDetailRouter  from "./routes/personal-detail.js"
 import deleteAccountRouter from "./routes/delete-account.js"
+import getTimerDataRouter from "./routes/start-activity.js"
 
 const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
@@ -35,20 +36,10 @@ webServer.use("/signup", signupRouter);
 webServer.use("/your-activity", yourActRouter);
 webServer.use("/Personaldetail", personalDetailRouter);
 webServer.use("/DeleteAccount", deleteAccountRouter);
+webServer.use("/start-activity", getTimerDataRouter);
 
 // server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
-
-webServer.get("/start-activity/:_id", async (req, res) => {
-  const responseID = req.params._id                   //รับค่า id จาก url parameter
-  
-  // ค้นหาข้อมูลจาก database
-  const customerActivities = await databaseClient
-    .db()
-    .collection("customerActivities")
-    .findOne({_id :new ObjectId(responseID)})
-  res.json(customerActivities);
-});
 
 // initilize web server
 const currentServer = webServer.listen(process.env.PORT || 3000, () => {
