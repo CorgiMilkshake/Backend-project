@@ -15,6 +15,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
     res.json(customerActivities);
   });
 
+  //update the Timer data
   getTimerDataRouter.put("/:_id", async (req, res) => {
     const activityTimerID = req.params._id;                             // รับค่า id จาก url parameter
     const updatedHoursActivity = req.body.hours;                        // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
