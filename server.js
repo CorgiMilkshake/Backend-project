@@ -38,6 +38,7 @@ webServer.use("/Personaldetail", personalDetailRouter);
 webServer.use("/DeleteAccount", deleteAccountRouter);
 webServer.use("/start-activity", getTimerDataRouter);
 
+
 // server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
 
