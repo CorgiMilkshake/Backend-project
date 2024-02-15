@@ -7,7 +7,7 @@ import databaseClient from "./services/database.mjs";
 import { checkMissingField } from "./utils/requestUtils.js";
 import morgan from "morgan";
 import { ObjectId } from "mongodb";
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';   // karn add
 import jwt from "jsonwebtoken";
 import fs from 'fs'
 
@@ -23,7 +23,7 @@ webServer.use(cors());
 webServer.use(express.json());
 webServer.use(morgan('dev'))
 
-//S3 Config
+//S3 Config // karn add
 
 const accessKey = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
@@ -178,6 +178,8 @@ webServer.delete("/your-activity/:_id", async (req, res) => {
   }
 });
 
+
+// karn add
 webServer.delete("/delete-account/:_id", async (req, res) => {
   const personalID = req.params._id;
   // ดึงค่า _id มาจาก url parameter
@@ -218,7 +220,7 @@ webServer.post("/add-activity", async (req, res) => {
   res.json(body);
 });
 
-//test upload image
+//test upload image // karn add
 webServer.post("/api/upload",upload.single('actImage'), async (req, res) => {
   console.log(req.body);
   console.log(req.file);
@@ -258,6 +260,8 @@ webServer.post("/api/upload",upload.single('actImage'), async (req, res) => {
 //   }
 // });
 
+
+// karn add
 webServer.put("/PersonaldetailImage/:_id", async (req, res) => {
   const personalID = req.params._id;                             // รับค่า id จาก url parameter           // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
   const updatedImage = req.body.signup_photo;             // ข้อมูลจำนวนนาทีที่มีการเปลี่ยนแปลง
@@ -288,6 +292,8 @@ webServer.put("/PersonaldetailImage/:_id", async (req, res) => {
 
 });
 
+
+// karn add
 webServer.put("/Personaldetail/:_id", async (req, res) => {
   const userId = req.params._id;                             // รับค่า id จาก url parameter
   const updatedFname = req.body.signup_firstname;            // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
@@ -319,6 +325,8 @@ webServer.put("/Personaldetail/:_id", async (req, res) => {
 
 });
 
+
+// karn add
 webServer.put("/start-activity/:_id", async (req, res) => {
   const activityTimerID = req.params._id;                             // รับค่า id จาก url parameter
   const updatedHoursActivity = req.body.hours;                        // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
