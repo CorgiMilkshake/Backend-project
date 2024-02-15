@@ -42,6 +42,38 @@ webServer.use("/start-activity", getTimerDataRouter);
 // server routes test
 webServer.get("/", (req, res) => res.send("This is user management system"));
 
+getTimerDataRouter.put("/:_id", async (req, res) => {
+    const activityTimerID = req.params._id;                             // รับค่า id จาก url parameter
+    const updatedHoursActivity = req.body.hours;                        // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
+    const updatedMinuteActivity = req.body.minutes;                     // ข้อมูลจำนวนนาทีที่มีการเปลี่ยนแปลง
+    const updatedSecondsActivity = req.body.seconds;
+
+    try {
+      // อัปเดตกิจกรรมของลูกค้าในฐานข้อมูล
+      const updatedResult = await databaseClient
+      .db()
+      .collection("customerActivities")
+      .updateOne(
+          { _id: new ObjectId(activityTimerID) },
+          { $set: { hours: updatedHoursActivity, minutes: updatedMinuteActivity, seconds: updatedSecondsActivity } }
+      )
+
+        // หากสามารถ update ข้อมูลใน database แล้ว modifiedCount จะเท่ากับ 1
+        if (updatedResult.modifiedCount === 1) {
+            //update สำเร็จ
+            res.status(200).json({ message: "Timer updated successfully" });
+        } else {
+            //update ไม่สำเร็จ
+            res.status(404).json({ message: "Timer not found" });
+        }
+    } catch (error) {
+        //เมื่อเกิด server error
+        console.error("Error updating activity:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+
+  });
+
 // initilize web server
 const currentServer = webServer.listen(process.env.PORT || 3000, () => {
 // const currentServer = webServer.listen(PORT, HOSTNAME, () => {
