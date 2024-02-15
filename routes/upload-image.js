@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 const uploadImageRouter = express.Router();                                                                //เก็บค่าฟังก์ชั่น express router ใน uploadImageRouter
@@ -40,4 +41,4 @@ uploadImageRouter.post("/",upload.single('actImage'), async (req, res) => {
     res.send(req.file)
   });
 
-export default addActitvityRouter;
+export default uploadImageRouter;
