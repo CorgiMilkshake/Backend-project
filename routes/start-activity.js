@@ -20,6 +20,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
     const activityTimerID = req.params._id;                             // รับค่า id จาก url parameter
     const updatedHoursActivity = req.body.hours;                        // ข้อมูลจำนวนชั่วโมงที่มีการเปลี่ยนแปลง
     const updatedMinuteActivity = req.body.minutes;                     // ข้อมูลจำนวนนาทีที่มีการเปลี่ยนแปลง
+    const updatedSecondsActivity = req.body.seconds;
 
     try {
       // อัปเดตกิจกรรมของลูกค้าในฐานข้อมูล
@@ -28,7 +29,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
       .collection("customerActivities")
       .updateOne(
           { _id: new ObjectId(activityTimerID) },
-          { $set: { hours: updatedHoursActivity, minutes: updatedMinuteActivity } }
+          { $set: { hours: updatedHoursActivity, minutes: updatedMinuteActivity, seconds: updatedSecondsActivity } }
       )
 
         // หากสามารถ update ข้อมูลใน database แล้ว modifiedCount จะเท่ากับ 1
