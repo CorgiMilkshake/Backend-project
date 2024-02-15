@@ -1,5 +1,5 @@
 import express from "express";
-import { checkMissingField } from "../utils/requestUtils.js";
+import { ObjectId } from "mongodb";
 import databaseClient from "../services/database.mjs";
 
 const getTimerDataRouter = express.Router();    
@@ -22,7 +22,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
     const updatedMinuteActivity = req.body.minutes;                     // ข้อมูลจำนวนนาทีที่มีการเปลี่ยนแปลง
     const updatedSecondsActivity = req.body.seconds;
     const updatedStatusActivity = req.body.status;
-
+  
     try {
       // อัปเดตกิจกรรมของลูกค้าในฐานข้อมูล
       const updatedResult = await databaseClient
@@ -32,7 +32,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
           { _id: new ObjectId(activityTimerID) },
           { $set: { hours: updatedHoursActivity, minutes: updatedMinuteActivity, seconds: updatedSecondsActivity, status: updatedStatusActivity } }
       )
-
+  
         // หากสามารถ update ข้อมูลใน database แล้ว modifiedCount จะเท่ากับ 1
         if (updatedResult.modifiedCount === 1) {
             //update สำเร็จ
@@ -46,7 +46,7 @@ getTimerDataRouter.get("/:_id", async (req, res) => {
         console.error("Error updating activity:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-
+  
   });
 
 
