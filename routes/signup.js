@@ -34,16 +34,16 @@ signupRouter.post("/", async (req, res) => {
       return;
     }
   
-     // Check if login_email is duplicate
-     const existingUser = await databaseClient
+    // Check if login_email is duplicate
+    const existingUser = await databaseClient
       .db()
       .collection("customerInfo")
-      .findOne({ emailLogin });
+      .findOne({ login_email: emailLogin });
 
-      if (!existingUser) {
-        res.send("This email has been used.");
-        return;
-      }
+    if (existingUser) {
+      res.send("This email has been used.");
+      return;
+    }
     
     // เข้ารหัส password โดยใช้ bcrypt
     const saltRound = await bcrypt.genSalt(SALT);
