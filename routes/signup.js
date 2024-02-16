@@ -41,7 +41,8 @@ signupRouter.post("/", async (req, res) => {
       .findOne({ login_email: emailLogin });
 
     if (existingUser) {
-      res.send("This email has been used.");
+      // res.send("This email has been used.");
+      res.status(404).json({ message: "This email has been used." });
       return;
     }
     
