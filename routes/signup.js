@@ -34,24 +34,15 @@ signupRouter.post("/", async (req, res) => {
       return;
     }
   
-     // Check if login_email is duplicate
-    //  const existingUser = await databaseClient
-    //   .db()
-    //   .collection("customerInfo")
-    //   .findOne({ emailLogin });
-
-    //   if (!existingUser) {
-    //     res.send("This email has been used.");
-    //     return;
-    //   }
-
-      const existingUser = await databaseClient
+    // Check if login_email is duplicate
+    const existingUser = await databaseClient
       .db()
       .collection("customerInfo")
-      .findOne({ emailLogin });
-      if (existingUser !== null) {
-      res.send("User does exist.");
-      exit();
+      .findOne({ login_email: emailLogin });
+
+    if (existingUser) {
+      res.send("This email has been used.");
+      return;
     }
     
     // เข้ารหัส password โดยใช้ bcrypt
