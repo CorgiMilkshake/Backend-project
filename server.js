@@ -38,7 +38,7 @@ webServer.use("/login", loginRouter);
 webServer.use("/signup", signupRouter);
 webServer.use("/your-activity", yourActRouter);
 webServer.use("/Personaldetail", personalDetailRouter);
-webServer.use("/DeleteAccount", deleteAccountRouter);
+webServer.use("/delete-account", deleteAccountRouter);
 webServer.use("/start-activity", getTimerDataRouter);
 webServer.use("/api/upload", uploadImageRouter);
 webServer.use("/PersonaldetailImage", personalImageRouter)
