@@ -19,6 +19,7 @@ import deleteAccountRouter from "./routes/delete-account.js"
 import getTimerDataRouter from "./routes/start-activity.js"
 import uploadImageRouter  from "./routes/upload-image.js"
 import personalImageRouter from "./routes/personal-image.js"
+import userDataRouter from "./routes/user-data.js";
 
 const HOSTNAME = process.env.SERVER_IP || "127.0.0.1";
 const PORT = process.env.SERVER_PORT || 3000;
