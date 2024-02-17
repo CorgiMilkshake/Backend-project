@@ -42,6 +42,7 @@ webServer.use("/delete-account", deleteAccountRouter);
 webServer.use("/start-activity", getTimerDataRouter);
 webServer.use("/api/upload", uploadImageRouter);
 webServer.use("/PersonaldetailImage", personalImageRouter)
+webServer.use("/user-data", userDataRouter)
 
 // server routes test
 webServer.get("/", (req, res) => res.send("This is GreenSculpt management system"));
