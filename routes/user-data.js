@@ -10,8 +10,7 @@ userDataRouter.get("/:_id", async (req, res) => {
     const customerInfo = await databaseClient
       .db()
       .collection("customerInfo")
-      .find({ _id :new ObjectId(req.params._id) }, { projection: { login_password: 0 } })
-      .toArray();
+      .findOne({ _id :new ObjectId(req.params._id) }, { projection: { login_password: 0 } })
     res.json(customerInfo);                               //ส่งค่าข้อมูลในรูปแบบของ JSON
 });
 
