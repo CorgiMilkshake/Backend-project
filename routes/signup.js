@@ -40,9 +40,15 @@ signupRouter.post("/", async (req, res) => {
       .collection("customerInfo")
       .findOne({ login_email: emailLogin });
 
+    // if (existingUser) {
+    //   res.send("This email has been used.");
+    //   return;
+    // }
+
     if (existingUser) {
-      res.send("This email has been used.");
-      return;
+      res.json({ message: "email taken" });
+    } else {
+      res.json({ message: "email available" });
     }
     
     // เข้ารหัส password โดยใช้ bcrypt

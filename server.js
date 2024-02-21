@@ -46,6 +46,19 @@ webServer.use("/PersonaldetailImage", personalImageRouter)
 // server routes test
 webServer.get("/", (req, res) => res.send("This is GreenSculpt management system"));
 
+webServer.get("/api/signup/check-email/:email", async (req, res) => {
+  const email = req.params.email;
+  const existingUser = await databaseClient
+    .db()
+    .collection("customerInfo")
+    .findOne({ emailLogin: email });
+  if (existingUser) {
+    res.json({ taken: true });
+  } else {
+    res.json({ taken: false });
+  }
+});
+
 // initilize web server
 const currentServer = webServer.listen(process.env.PORT || 3000, () => {
 // const currentServer = webServer.listen(PORT, HOSTNAME, () => {
